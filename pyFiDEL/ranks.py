@@ -9,7 +9,6 @@ __version__ = '1.0.0'
 
 import numpy as np
 import pandas as pd
-from scipy import special
 import scipy
 
 
@@ -77,7 +76,7 @@ def get_fermi_min(auc: float, rho: float, N: int = 1, resol: float = 0.0001, met
     if auc < .5:
         auc = 1. - auc
 
-    lambdas = get_lambda(auc, N=1000, rho=rho)
+    lambdas = get_lambda(auc, rho, N=1000)
     initials = [lambdas['l2'] * 1000, -lambdas['l1'] / (1000 * lambdas['l2'])]
 
     # find beta, mu
@@ -101,8 +100,8 @@ def get_fermi_min(auc: float, rho: float, N: int = 1, resol: float = 0.0001, met
         }
 
 
-def _cost(bm: list, auc: float, rho: float, resol: float) -> float:
-    ''' cost function to minimize '''
+def _cost0(bm: list, auc: float, rho: float, resol: float) -> float:
+    ''' cost function to minimize using simple approximation '''
 
     r_prime = np.linspace(0, 1., num=int(1. / resol), endpoint=False)
     sum1 = np.sum(resol / (1. + np.exp(bm[0] * (r_prime - bm[1]))))
@@ -114,11 +113,23 @@ def _cost(bm: list, auc: float, rho: float, resol: float) -> float:
     return diff1 * diff1 + diff2 * diff2
 
 
+def _cost(bm: list, auc: float, rho: float, resol: float) -> float:
+    ''' cost function to minimize using integrate'''
+
+    sum1 = scipy.integrate.quad(lambda x: 1. / (1. + np.exp(bm[0] * (x - bm[1]))), 0, 1.)
+    sum2 = scipy.integrate.quad(lambda x: x / (1. + np.exp(bm[0] * (x - bm[1]))), 0, 1.)
+
+    diff1 = rho - sum1[0]
+    diff2 = .5 * rho - rho * (1. - rho) * (auc - .5) - sum2[0]
+
+    return diff1 * diff1 + diff2 * diff2
+
+
 def get_fermi_root(auc: float, rho: float, N: int = 1) -> dict:
     ''' calculate beta and mu from AUC and rho '''
 
-    lambdas = get_lambda(auc, N=1000, rho=rho)
-    beta0 = -lambdas['l1'] / (1000. * lambdas['l2'])
+    lambdas = get_lambda(auc, rho, N=1000)
+    beta0 = lambdas['l2'] * 1000
 
     beta = scipy.optimize.brentq(_froot, 0.05, beta0 * 5., args=(auc, rho))
     mu = .5 - np.log(np.sinh(beta * (1. - rho) * .5) / np.sinh(beta * rho * .5)) / beta
@@ -137,12 +148,12 @@ def _froot(beta: float, auc: float, rho: float) -> float:
     mu = .5 - np.log(np.sinh(beta * (1. - rho) * .5) / np.sinh(beta * rho * .5)) / beta
     part1 = (scipy.special.spence(1. + np.exp(beta * (mu - 1.))) - scipy.special.spence(1. + np.exp(beta * mu)) - beta * np.log(np.exp(beta * (mu - 1.)) + 1.)) / (beta * beta)
     part2 = .5 * rho - rho * (1. - rho) * (auc - .5)
-    print(auc, rho, mu, '-', part1, part2)
+    # print(auc, rho, mu, '-', beta, part1 - part2)
 
     return part1 - part2
 
 
-def get_lambda(auc: float, N: int = 1000, rho: float = .5) -> dict:
+def get_lambda(auc: float, rho: float, N: int = 1000) -> dict:
     ''' calculate lambda1, lambda2 from auc, rho '''
 
     N = float(N)
@@ -154,7 +165,7 @@ def get_lambda(auc: float, N: int = 1000, rho: float = .5) -> dict:
     l2_high = 2. / (np.sqrt(3) * N * temp)
 
     alpha = 2. * (auc - .5)
-    l1 = l1_high * alpha + l2_low * (1. - alpha)
+    l1 = l1_high * alpha + l1_low * (1. - alpha)
     l2 = l2_high * alpha + l2_low * (1. - alpha)
     r_star = 1. / l2 * np.log((1. - rho) / rho) - l1 / l2
 
@@ -169,7 +180,7 @@ def get_lambda(auc: float, N: int = 1000, rho: float = .5) -> dict:
     }
 
 
-def build_correspond_table(auclist: list, rholist: list, resol: float = 0.001) -> pd.DataFrame:
+def build_correspond_table(auclist: list, rholist: list, resol: float = 0.001, method: str = 'root') -> pd.DataFrame:
     ''' calculate correspondence table between (auc, rho) and (beta, mu) '''
 
     ans = pd.DataFrame()
@@ -177,7 +188,10 @@ def build_correspond_table(auclist: list, rholist: list, resol: float = 0.001) -
     for auc in auclist:
         for rho in rholist:
             row = {'auc': auc, 'rho': rho}
-            row.update(get_fermi_min(auc, rho, resol=resol))
+            if method == 'root':
+                row.update(get_fermi_root(auc, rho))
+            else:
+                row.update(get_fermi_min(auc, rho, resol=resol))
             ans = ans.append(row, ignore_index=True)
 
     return ans
