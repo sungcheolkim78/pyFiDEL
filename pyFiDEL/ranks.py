@@ -34,8 +34,15 @@ def auc_rank(scores: list, y: list) -> float:
     return ans
 
 
-def build_metric(scores: list, y: list, method='min') -> (pd.DataFrame, dict):
+def build_metric(scores: list, y: list, method='root') -> (pd.DataFrame, dict):
     ''' calculate all metrics using rank formula '''
+
+    # calculate basic parameters
+    N = len(y)
+    N1 = np.sum(y == 'Y')
+    N2 = N - N1
+    rho = float(N1 / N)
+    auc0 = auc_rank(scores, y)
 
     # prepare data frame
     df = pd.DataFrame({'score': scores, 'y': y})
@@ -44,11 +51,6 @@ def build_metric(scores: list, y: list, method='min') -> (pd.DataFrame, dict):
 
     t_rank = df['y'] == 'Y'
     f_rank = df['y'] == 'N'
-    N = len(y)
-    N1 = np.sum(t_rank)
-    N2 = N - N1
-    rho = float(N1 / N)
-    auc0 = auc_rank(scores, y)
 
     df['tpr'] = np.cumsum(t_rank) / N1
     df['fpr'] = np.cumsum(f_rank) / N2
