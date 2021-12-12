@@ -138,9 +138,9 @@ def get_fermi_root(auc: float, rho: float, N: int = 1) -> dict:
     r_star = 1. / beta * np.log((1. - rho) / rho) + mu
 
     return {
-        'beta': beta / N,
-        'mu': mu * N,
-        'r_star': r_star * N,
+        'beta': beta / float(N),
+        'mu': mu * float(N),
+        'r_star': r_star * float(N),
     }
 
 

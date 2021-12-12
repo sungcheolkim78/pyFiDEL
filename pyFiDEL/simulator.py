@@ -20,13 +20,17 @@ class SimClassifier(object):
     class1 = 'Y'
     class2 = 'N'
 
-    def __init__(self, N: int = 1000, rho: float = .5):
+    def __init__(self, N: int = 1000, rho: float = .5, y: list = None):
         self.N = N
         self.rho = rho
         self.N1 = int(self.N * self.rho)
         self.N2 = N - self.N1
 
-        y = ['Y'] * self.N1 + ['N'] * self.N2
+        if y is None:
+            y = ['Y'] * self.N1 + ['N'] * self.N2
+        if set(y) != set(['Y', 'N']):
+            raise ValueError(f'y should have only "Y"/"N" - {set(y)}')
+
         self.y = np.array(y)
         self.score = None
 
