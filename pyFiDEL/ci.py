@@ -61,17 +61,20 @@ def Pxyy_int(beta: float, mu: float, rho: float, resol: float = 1E-6) -> float:
     return ans
 
 
-def var_auc_fermi(auc: float, rho: float, N: int, resol: float = 1E-6, debug: bool = False):
+def var_auc_fermi(auc: float, rho: float, N: int, resol: float = 1E-6):
     ''' calculate variance of AUC from Fermi-Dirac distribution '''
 
+    # calculate parameters
     bm = get_fermi_root(auc, rho)
     N1 = int(N * rho)
     N2 = N - N1
 
+    # calculate Pxy, Pxxy, Pxyy
     Pxy_value = Pxy_int(bm['beta'], bm['mu'], rho, resol=resol)
     Pxxy_value = Pxxy_int(bm['beta'], bm['mu'], rho, resol=resol)
     Pxyy_value = Pxyy_int(bm['beta'], bm['mu'], rho, resol=resol)
 
+    # calculate variance and std of AUC
     var_auc = (Pxy_value * (1. - Pxy_value)
                + (N1 - 1.) * (Pxxy_value - Pxy_value * Pxy_value)
                + (N2 - 1.) * (Pxyy_value - Pxy_value * Pxy_value)) / (N1 * N2)
