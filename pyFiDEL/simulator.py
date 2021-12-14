@@ -28,17 +28,18 @@ class SimClassifier(object):
 
         if y is None:
             y = ['Y'] * self.N1 + ['N'] * self.N2
-        if set(y) != set(['Y', 'N']):
+        elif set(y) != set(['Y', 'N']):
             raise ValueError(f'y should have only "Y"/"N" - {set(y)}')
 
         self.y = np.array(y)
         self.score = None
 
-    def create_gaussian_scores(self, auc0: float = .9, tol: float = 0.0001, max_iter: int = 2000):
+    def create_gaussian_scores(self, auc0: float = .9, tol: float = 1E-4, max_iter: int = 2000):
         ''' create gaussian scores to match AUC '''
 
         count = 0
-        mu = 2. * special.erfinv(2. * auc0 - 1)
+        mu = 2. * special.erfinv(2. * auc0 - 1.)
+        # as auc approaches to .5, it is harder to converge
         max_iter = max_iter / ((auc0 - .5) * 10)
 
         # create score distribution by iterating creation of normal distribution
@@ -59,6 +60,20 @@ class SimClassifier(object):
         self.score = score
 
         return score
+
+    def create_predictions(self, n_methods: int = 20, auc_list: list = None):
+        ''' create n_methods gaussian score sets '''
+
+        if auc_list is None:
+            auc_list = np.linspace(.51, .99, num=n_methods)
+        else:
+            n_methods = len(auc_list)
+
+        pred = np.zeros((self.N, n_methods))
+        for i in range(n_methods):
+            pred[:, i] = self.create_gaussian_scores(auc0=auc_list[i])
+
+        return pred
 
     def plot_o(self):
         ''' build data for  '''
