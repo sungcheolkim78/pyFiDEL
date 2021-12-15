@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from .ranks import get_fermi_root
+from .ci import var_auc_fermi
 from .utils import fermi_b
 
 
@@ -108,6 +109,7 @@ class PCR(object):
         }
 
         self.info.update(get_fermi_root(auc0, self.rho))
+        self.info.update(var_auc_fermi(auc0, self.rho, N))
 
         return self.df, self.info
 
