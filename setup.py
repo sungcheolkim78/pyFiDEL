@@ -22,7 +22,7 @@ setup(
     keywords="classifier auc ensemble binary",
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     python_requires=">=3.7",
-    install_requires=["pandas", "numpy", "matplotlib", "sklearn", "seaborn"],
+    install_requires=["pandas", "numpy", "matplotlib", "scikit-learn", "seaborn"],
     package_data={
         "": ["*.txt"],
         "pyFiDEL": ["data/*.gz"],

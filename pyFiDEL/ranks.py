@@ -207,7 +207,7 @@ def build_correspond_table(
 ) -> pd.DataFrame:
     """calculate correspondence table between (auc, rho) and (beta, mu)"""
 
-    ans = pd.DataFrame()
+    ans = []
 
     for auc in auclist:
         for rho in rholist:
@@ -216,6 +216,6 @@ def build_correspond_table(
                 row.update(get_fermi_root(auc, rho))
             else:
                 row.update(get_fermi_min(auc, rho, resol=resol))
-            ans = ans.append(row, ignore_index=True)
+            ans.append(row)
 
-    return ans
+    return pd.DataFrame.from_dict(ans)
