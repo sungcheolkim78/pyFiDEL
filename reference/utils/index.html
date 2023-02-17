@@ -467,7 +467,6 @@
   <div class="doc doc-contents first">
   
       <p>utils.py - utility functions</p>
-<p>Soli Deo Gloria</p>
 
   
 
@@ -493,7 +492,79 @@
 
   <div class="doc doc-contents ">
   
-      <p>calculate fermi-dirac distribution with np.array x with beta and mu</p>
+      <p>calculate Fermi-Dirac distribution of array x with beta and mu.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>x</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>input array</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>b</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>beta</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>m</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>mu</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>normalized</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>option to normalized distribution</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Fermi-Dirac distribution</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 
@@ -511,7 +582,69 @@
 
   <div class="doc doc-contents ">
   
-      <p>calculate fermi-dirac distribution with np.array x with l1 and l2</p>
+      <p>calculate Fermi-Dirac distribution with np.array x with l1 and l2</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>x</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>array of inputs</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>l1</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>l1 coefficient</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>l2</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>l2 coefficient</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Fermi-Dirac distribution</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 

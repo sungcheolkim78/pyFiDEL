@@ -497,7 +497,6 @@
   <div class="doc doc-contents first">
   
       <p>ci.py - confidence interval calculation</p>
-<p>Soli Deo Gloria</p>
 
   
 
@@ -523,7 +522,49 @@
 
   <div class="doc doc-contents ">
   
-      <p>calculate Pxxy iwth integral formula</p>
+      <p>calculate Pxxy with integral formula</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>resol</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>resolution for integral calculation</p></td>
+          <td>
+                <code>1e-06</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Pxxy is probability of x at given y</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 
@@ -543,6 +584,48 @@
   
       <p>calculate Pxy with integral formula</p>
 
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>resol</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>resolution for integral calculation</p></td>
+          <td>
+                <code>1e-06</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Pxy is probability of x at given y</p></td>
+        </tr>
+    </tbody>
+  </table>
+
   </div>
 
 </div>
@@ -559,7 +642,49 @@
 
   <div class="doc doc-contents ">
   
-      <p>calculate Pxyy iwth integral formula</p>
+      <p>calculate Pxyy with integral formula</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>resol</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>resolution for integral calculation</p></td>
+          <td>
+                <code>1e-06</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Pxyy is probability of x at given y</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 
@@ -578,6 +703,58 @@
   <div class="doc doc-contents ">
   
       <p>calculate variance of AUC from Fermi-Dirac distribution</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>N</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of samples</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resol</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>resolution for integral calculation</p></td>
+          <td>
+                <code>1e-06</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>dictionary of all parameters</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 

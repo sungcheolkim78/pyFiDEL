@@ -323,6 +323,20 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#pyFiDEL.ensemble.FiDEL.add_label" class="md-nav__link">
+    add_label()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyFiDEL.ensemble.FiDEL.add_predictions" class="md-nav__link">
+    add_predictions()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pyFiDEL.ensemble.FiDEL.calculate_performance" class="md-nav__link">
     calculate_performance()
   </a>
@@ -445,6 +459,20 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#pyFiDEL.ensemble.FiDEL.add_label" class="md-nav__link">
+    add_label()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyFiDEL.ensemble.FiDEL.add_predictions" class="md-nav__link">
+    add_predictions()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pyFiDEL.ensemble.FiDEL.calculate_performance" class="md-nav__link">
     calculate_performance()
   </a>
@@ -481,7 +509,6 @@
   <div class="doc doc-contents first">
   
       <p>ensemble.py - ensemble method with FiDEL</p>
-<p>Soli Deo Gloria</p>
 
   
 
@@ -499,7 +526,8 @@
 
 
 <h2 id="pyFiDEL.ensemble.FiDEL" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">FiDEL</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">method_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+        <code>FiDEL</code>
+
 
 <a href="#pyFiDEL.ensemble.FiDEL" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -508,6 +536,72 @@
       <p class="doc doc-class-bases">
         Bases: <code>object</code></p>
 
+  
+      <p>ensemble classifier using FiDEL</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyFiDEL</span> <span class="kn">import</span> <span class="n">FiDEL</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">fdc</span> <span class="o">=</span> <span class="n">FiDEL</span><span class="p">()</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">fdc</span><span class="o">.</span><span class="n">add_prediction</span><span class="p">(</span><span class="n">pred1</span><span class="p">,</span> <span class="s2">&quot;RandomForests&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">fdc</span><span class="o">.</span><span class="n">add_prediction</span><span class="p">(</span><span class="n">pred2</span><span class="p">,</span> <span class="s2">&quot;glm&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">fdc</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">fdc</span><span class="o">.</span><span class="n">calculate_performance</span><span class="p">()</span>
+</code></pre></div>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>predictions</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>all previous predictions on samples</p></td>
+        </tr>
+        <tr>
+          <td><code>n_samples</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of samples</p></td>
+        </tr>
+        <tr>
+          <td><code>n_methods</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of classifiers</p></td>
+        </tr>
+        <tr>
+          <td><code>method_names</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>list of method names</p></td>
+        </tr>
+        <tr>
+          <td><code>rank_matrix</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>collection of ranks based on the predictions</p></td>
+        </tr>
+        <tr>
+          <td><code>ensemble_summary</code></td>
+          <td>
+                <code><span title="pandas">pd</span>.<span title="pandas.DataFrame">DataFrame</span></code>
+          </td>
+          <td><p>summary of methods</p></td>
+        </tr>
+    </tbody>
+  </table>
 
 
 
@@ -527,8 +621,78 @@
 
 
 
+<h3 id="pyFiDEL.ensemble.FiDEL.add_label" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_label</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">true_value</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span></code>
+
+<a href="#pyFiDEL.ensemble.FiDEL.add_label" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add label list of <code>Y</code> and <code>N</code></p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pyFiDEL.ensemble.FiDEL.add_predictions" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_predictions</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></code>
+
+<a href="#pyFiDEL.ensemble.FiDEL.add_predictions" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add prediction of single method</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>prediction</code></td>
+          <td>
+                <code>list | <span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>model predictions or scores on samples. sample order must be same on each method</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>method_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>model or classifier name</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
 <h3 id="pyFiDEL.ensemble.FiDEL.calculate_performance" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">calculate_performance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;FiDEL&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">calculate_performance</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;FiDEL&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
 
 <a href="#pyFiDEL.ensemble.FiDEL.calculate_performance" class="headerlink" title="Permanent link">&para;</a></h3>
 
@@ -536,6 +700,40 @@
   <div class="doc doc-contents ">
   
       <p>calculate ensemble performance</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>method</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>ensemble method name</p></td>
+          <td>
+                <code>&#39;FiDEL&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>alpha</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>intensity coefficient of FiDEL calculation</p></td>
+          <td>
+                <code>1.0</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 

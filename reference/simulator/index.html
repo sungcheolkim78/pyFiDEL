@@ -379,13 +379,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyFiDEL.simulator.SimClassifier.plot_o" class="md-nav__link">
-    plot_o()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pyFiDEL.simulator.SimClassifier.plot_score" class="md-nav__link">
     plot_score()
   </a>
@@ -480,13 +473,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyFiDEL.simulator.SimClassifier.plot_o" class="md-nav__link">
-    plot_o()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pyFiDEL.simulator.SimClassifier.plot_score" class="md-nav__link">
     plot_score()
   </a>
@@ -523,7 +509,6 @@
   <div class="doc doc-contents first">
   
       <p>simulator.py - create gaussian score distribution to mimic binary classifier</p>
-<p>Soli Deo Gloria</p>
 
   
 
@@ -541,7 +526,8 @@
 
 
 <h2 id="pyFiDEL.simulator.SimClassifier" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">SimClassifier</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+        <code>SimClassifier</code>
+
 
 <a href="#pyFiDEL.simulator.SimClassifier" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -550,6 +536,58 @@
       <p class="doc doc-class-bases">
         Bases: <code>object</code></p>
 
+  
+      <p>Simulator for the binary classifier.</p>
+<p>It generates multiple Gaussian score distributions to model various
+binary classifier with different AUC.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>N</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of samples</p></td>
+        </tr>
+        <tr>
+          <td><code>rho</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>ratio between True/False element counts</p></td>
+        </tr>
+        <tr>
+          <td><code>N1</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of True elements</p></td>
+        </tr>
+        <tr>
+          <td><code>N2</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of False elements</p></td>
+        </tr>
+        <tr>
+          <td><code>y</code></td>
+          <td>
+                <code>nd.<span title="nd.array">array</span></code>
+          </td>
+          <td><p>array of ground truth</p></td>
+        </tr>
+    </tbody>
+  </table>
 
 
 
@@ -577,7 +615,69 @@
 
   <div class="doc doc-contents ">
   
-      <p>create gaussian scores to match AUC</p>
+      <p>create gaussian scores to match AUC.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>auc0</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>target Area under ROC curve (AUC)</p></td>
+          <td>
+                <code>0.9</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tol</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>tolerance for target AUC</p></td>
+          <td>
+                <code>0.0001</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>max_iter</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>the maximum number of iteration</p></td>
+          <td>
+                <code>2000</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>score of binary classifier</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 
@@ -597,23 +697,57 @@
   
       <p>create n_methods gaussian score sets</p>
 
-  </div>
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>n_methods</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>number of classifiers</p></td>
+          <td>
+                <code>20</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>auc_list</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td><p>list of target AUCs</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="pyFiDEL.simulator.SimClassifier.plot_o" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">plot_o</span><span class="p">()</span></code>
-
-<a href="#pyFiDEL.simulator.SimClassifier.plot_o" class="headerlink" title="Permanent link">&para;</a></h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>build data for</p>
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>prediction matrix of shape (N, n_methods)</p></td>
+        </tr>
+    </tbody>
+  </table>
 
   </div>
 
