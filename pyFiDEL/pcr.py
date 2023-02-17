@@ -1,9 +1,8 @@
 """
 pcr.py - Probability of Class y at given Rank r (PCR)
-
-Soli Deo Gloria
 """
 
+import logging
 import numpy as np
 import pandas as pd
 
@@ -12,6 +11,9 @@ from typing import Tuple
 from .ranks import get_fermi_root
 from .ci import var_auc_fermi
 from .utils import fermi_b
+
+logger = logging.getLogger("utils")
+logging.basicConfig(level=logging.INFO)
 
 
 class PCR(object):
@@ -53,9 +55,7 @@ class PCR(object):
 
         if len(self.y) - 10 < self.sample_size:
             self.sample_size = len(self.y) - 10
-            print(
-                f"... set sample size as {self.sample_size} (original size: {len(self.y)})"
-            )
+            print(f"... set sample size as {self.sample_size} (original size: {len(self.y)})")
 
         frac = float(self.sample_size) / float(self.N0)
         ans = np.zeros((self.sample_size, self.sample_n), dtype="float")
@@ -65,9 +65,7 @@ class PCR(object):
             tmp = self.df0.groupby("y").sample(frac=frac)
 
             # convert bool to float for averaging
-            ans[:, i] = np.array(
-                tmp.sort_values(by=["scores"])["y"].values == "Y", dtype="float"
-            )
+            ans[:, i] = np.array(tmp.sort_values(by=["scores"])["y"].values == "Y", dtype="float")
 
         self.sample_table = ans  # For record
         self.pcr = ans.mean(axis=1)
@@ -82,11 +80,7 @@ class PCR(object):
         N2 = N - N1
         rank = np.linspace(1, N, num=N)
 
-        return (
-            np.abs(np.sum(rank * self.pcr) / N1 - np.sum(rank * (1.0 - self.pcr)) / N2)
-            / N
-            + 0.5
-        )
+        return np.abs(np.sum(rank * self.pcr) / N1 - np.sum(rank * (1.0 - self.pcr)) / N2) / N + 0.5
 
     def auprc(self):
         """calculate area under precision recall curve"""
@@ -94,15 +88,7 @@ class PCR(object):
         N = self.sample_size
         prec = np.cumsum(self.pcr) / np.linspace(1, N, num=N)
 
-        return (
-            0.5
-            * self.rho
-            * (
-                1.0
-                + np.sum(prec[1 : (N - 2)] * prec[2 : (N - 1)])
-                / (N * self.rho * self.rho)
-            )
-        )
+        return 0.5 * self.rho * (1.0 + np.sum(prec[1: (N - 2)] * prec[2: (N - 1)]) / (N * self.rho * self.rho))
 
     def build_metric(self) -> Tuple[pd.DataFrame, dict]:
         """calculate metric and parameters from pcr"""
@@ -138,9 +124,7 @@ class PCR(object):
     def check_fermi(self):
         """check matching between fermi-dirac distribution and pcr"""
 
-        self.df["fy"] = fermi_b(
-            self.df["rank"], self.info["beta"], self.info["mu"], normalized=True
-        )
+        self.df["fy"] = fermi_b(self.df["rank"], self.info["beta"], self.info["mu"], normalized=True)
         self.df["err"] = self.df["prob"] - self.df["fy"]
 
         return {

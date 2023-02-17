@@ -1,23 +1,23 @@
 """
-ranks.py - rank based metric calculation for structured learning
-
-Soli Deo Gloria
+ranks.py - rank-based metric calculation for supervised learning
 """
 
+import logging
 import numpy as np
 import pandas as pd
 import scipy
 
 from typing import Tuple
 
+logger = logging.getLogger("ranks")
+logging.basicConfig(level=logging.INFO)
+
 
 def auc_rank(scores: list, y: list) -> float:
     """calculate AUC using rank formula"""
 
     if len(scores) != len(y):
-        raise ValueError(
-            f"length of scores ({len(scores)}) does not match to labels ({len(y)})"
-        )
+        raise ValueError(f"length of scores ({len(scores)}) does not match to labels ({len(y)})")
 
     N = len(y)
     N1 = sum([1 for x in y if x == "Y"])
@@ -25,6 +25,7 @@ def auc_rank(scores: list, y: list) -> float:
 
     # calculate the rank of scores O(NlogN)
     rank = np.array(scores).argsort().argsort()
+
     # calculate AUC using rank formula
     ans = np.abs(rank[y == "Y"].sum() / N1 - rank[y == "N"].sum() / N2) / N + 0.5
 
@@ -61,8 +62,7 @@ def build_metric(scores: list, y: list, method="root") -> Tuple[pd.DataFrame, di
     info = {
         "auc_rank": auc0,
         "auc_bac": 2.0 * df["bac"].mean() - 0.5,
-        "auprc": 0.5 * N1 / N
-        * (1.0 + N / (N1 * N1) * np.sum(df["prec"][1 : N - 2] * df["prec"][2 : N - 1])),
+        "auprc": 0.5 * N1 / N * (1.0 + N / (N1 * N1) * np.sum(df["prec"][1: N - 2] * df["prec"][2: N - 1])),
         "rho": rho,
     }
     if method == "min":
@@ -73,9 +73,7 @@ def build_metric(scores: list, y: list, method="root") -> Tuple[pd.DataFrame, di
     return df, info
 
 
-def get_fermi_min(
-    auc: float, rho: float, N: int = 1, resol: float = 0.0001, method: str = "beta"
-) -> dict:
+def get_fermi_min(auc: float, rho: float, N: int = 1, resol: float = 0.0001, method: str = "beta") -> dict:
     """calculate beta and mu (or l1 and l2) from AUC and rho"""
 
     # check auc range
@@ -122,12 +120,8 @@ def _cost0(bm: list, auc: float, rho: float, resol: float) -> float:
 def _cost(bm: list, auc: float, rho: float, resol: float) -> float:
     """cost function to minimize using integrate"""
 
-    sum1 = scipy.integrate.quad(
-        lambda x: 1.0 / (1.0 + np.exp(bm[0] * (x - bm[1]))), 0, 1.0
-    )
-    sum2 = scipy.integrate.quad(
-        lambda x: x / (1.0 + np.exp(bm[0] * (x - bm[1]))), 0, 1.0
-    )
+    sum1 = scipy.integrate.quad(lambda x: 1.0 / (1.0 + np.exp(bm[0] * (x - bm[1]))), 0, 1.0)
+    sum2 = scipy.integrate.quad(lambda x: x / (1.0 + np.exp(bm[0] * (x - bm[1]))), 0, 1.0)
 
     diff1 = rho - sum1[0]
     diff2 = 0.5 * rho - rho * (1.0 - rho) * (auc - 0.5) - sum2[0]
@@ -142,10 +136,7 @@ def get_fermi_root(auc: float, rho: float, N: int = 1) -> dict:
     beta0 = lambdas["l2"] * 1000
 
     beta = scipy.optimize.brentq(_froot, 0.05, beta0 * 5.0, args=(auc, rho))
-    mu = (
-        0.5
-        - np.log(np.sinh(beta * (1.0 - rho) * 0.5) / np.sinh(beta * rho * 0.5)) / beta
-    )
+    mu = 0.5 - np.log(np.sinh(beta * (1.0 - rho) * 0.5) / np.sinh(beta * rho * 0.5)) / beta
     r_star = 1.0 / beta * np.log((1.0 - rho) / rho) + mu
 
     return {
@@ -158,15 +149,8 @@ def get_fermi_root(auc: float, rho: float, N: int = 1) -> dict:
 def _froot(beta: float, auc: float, rho: float) -> float:
     """cost function for auc and rho"""
 
-    mu = (
-        0.5
-        - np.log(np.sinh(beta * (1.0 - rho) * 0.5) / np.sinh(beta * rho * 0.5)) / beta
-    )
-    part1 = (
-        scipy.special.spence(1.0 + np.exp(beta * (mu - 1.0)))
-        - scipy.special.spence(1.0 + np.exp(beta * mu))
-        - beta * np.log(np.exp(beta * (mu - 1.0)) + 1.0)
-    ) / (beta * beta)
+    mu = 0.5 - np.log(np.sinh(beta * (1.0 - rho) * 0.5) / np.sinh(beta * rho * 0.5)) / beta
+    part1 = (scipy.special.spence(1.0 + np.exp(beta * (mu - 1.0))) - scipy.special.spence(1.0 + np.exp(beta * mu)) - beta * np.log(np.exp(beta * (mu - 1.0)) + 1.0)) / (beta * beta)
     part2 = 0.5 * rho - rho * (1.0 - rho) * (auc - 0.5)
     # print(auc, rho, mu, '-', beta, part1 - part2)
 
@@ -177,9 +161,7 @@ def get_lambda(auc: float, rho: float, N: int = 1000) -> dict:
     """calculate lambda1, lambda2 from auc, rho"""
 
     fN = float(N)
-    l1_low = np.log(1.0 / rho - 1.0) - 12.0 * fN * (auc - 0.5) / (fN * fN - 1.0) * (
-        (fN + 1 + fN * rho) * 0.5 - fN * rho * auc
-    )
+    l1_low = np.log(1.0 / rho - 1.0) - 12.0 * fN * (auc - 0.5) / (fN * fN - 1.0) * ((fN + 1 + fN * rho) * 0.5 - fN * rho * auc)
     l2_low = 12.0 * fN * (auc - 0.5) / (fN * fN - 1.0)
 
     temp = np.sqrt(rho * (1.0 - rho) * (1.0 - 2.0 * (auc - 0.5)))
@@ -202,9 +184,7 @@ def get_lambda(auc: float, rho: float, N: int = 1000) -> dict:
     }
 
 
-def build_correspond_table(
-    auclist: list, rholist: list, resol: float = 0.001, method: str = "root"
-) -> pd.DataFrame:
+def build_correspond_table(auclist: list, rholist: list, resol: float = 0.001, method: str = "root") -> pd.DataFrame:
     """calculate correspondence table between (auc, rho) and (beta, mu)"""
 
     ans = pd.DataFrame()
