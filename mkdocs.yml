@@ -1,0 +1,45 @@
+site_name: pyFiDEL
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
+
+plugins:
+  - autorefs
+  - search
+  - section-index
+  - gen-files:
+      scripts:
+      - docs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      handlers:
+          python:
+              options:
+                show_source: false
+                show_submodules: yes
+                merge_init_into_class: yes
+                docstring_options:
+                  ignore_init_summary: yes
+
+extra_css:
+  - css/mkdocstrings.css
+
+nav:
+  - Home: index.md
+  - Concepts: concept.md
+  - Cookbook: cookbook.md
+  - Reference: reference/
+
