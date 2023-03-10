@@ -1,30 +1,30 @@
 """
 ci.py - confidence interval calculation
-
-Soli Deo Gloria
 """
-
-__author__ = "Sung-Cheol Kim"
-__version__ = "1.0.0"
 
 import logging
 import numpy as np
 
-from .utils import fermi_b
-from .ranks import get_fermi_root
+from utils import fermi_b
+from ranks import get_fermi_root
 
 logger = logging.getLogger("ci")
 logging.basicConfig(level=logging.INFO)
 
 
 def Pxy_int(beta: float, mu: float, rho: float, resol: float = 1e-6) -> float:
-    """calculate Pxy with integral formula"""
+    """calculate Pxy with integral formula
+
+    Args:
+        resol: resolution for integral calculation
+
+    Returns:
+        Pxy is probability of x at given y
+    """
 
     logger.info("... Pxy integral calculation with resolution = %f", resol)
 
-    p_table = fermi_b(
-        np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False
-    )
+    p_table = fermi_b(np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False)
 
     A = p_table
     B = np.linspace(len(p_table), 1, num=len(p_table)) - np.cumsum(p_table[::-1])[::-1]
@@ -36,53 +36,61 @@ def Pxy_int(beta: float, mu: float, rho: float, resol: float = 1e-6) -> float:
 
 
 def Pxxy_int(beta: float, mu: float, rho: float, resol: float = 1e-6) -> float:
-    """calculate Pxxy iwth integral formula"""
+    """calculate Pxxy with integral formula
+
+    Args:
+        resol: resolution for integral calculation
+
+    Returns:
+        Pxxy is probability of x at given y
+    """
 
     logger.info("... Pxxy integral calculation with resolution = %f", resol)
 
-    p_table = fermi_b(
-        np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False
-    )
+    p_table = fermi_b(np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False)
 
     A = 2.0 * p_table * np.cumsum(p_table) - p_table * p_table
     B = np.linspace(len(p_table), 1, num=len(p_table)) - np.cumsum(p_table[::-1])[::-1]
 
-    ans = (
-        np.sum(A * B)
-        - np.sum(p_table * p_table * (1.0 - p_table))
-        - np.sum(p_table * p_table)
-        - 2.0 * np.sum(p_table * (1.0 - p_table))
-    )
+    ans = np.sum(A * B) - np.sum(p_table * p_table * (1.0 - p_table)) - np.sum(p_table * p_table) - 2.0 * np.sum(p_table * (1.0 - p_table))
     ans = ans * resol * resol * resol / (rho * rho * (1.0 - rho))
 
     return ans
 
 
 def Pxyy_int(beta: float, mu: float, rho: float, resol: float = 1e-6) -> float:
-    """calculate Pxyy iwth integral formula"""
+    """calculate Pxyy with integral formula
 
-    print(f"... Pxyy integral calculation with resolution = {resol}")
+    Args:
+        resol: resolution for integral calculation
 
-    p_table = fermi_b(
-        np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False
-    )
+    Returns:
+        Pxyy is probability of x at given y
+    """
+
+    logger.info("... Pxyy integral calculation with resolution = %f", resol)
+
+    p_table = fermi_b(np.linspace(0, 1, num=int(1.0 / resol)), b=beta, m=mu, normalized=False)
 
     A = p_table
     B = np.cumsum((1.0 - p_table)[::-1])[::-1] ** 2
 
-    ans = (
-        np.sum(A * B)
-        - np.sum(p_table * (1.0 - p_table) * (1.0 - p_table))
-        - np.sum((1.0 - p_table) ** 2)
-        - 2.0 * np.sum(p_table * (1.0 - p_table))
-    )
+    ans = np.sum(A * B) - np.sum(p_table * (1.0 - p_table) * (1.0 - p_table)) - np.sum((1.0 - p_table) ** 2) - 2.0 * np.sum(p_table * (1.0 - p_table))
     ans = ans * resol * resol * resol / (rho * (1.0 - rho) * (1.0 - rho))
 
     return ans
 
 
-def var_auc_fermi(auc: float, rho: float, N: int, resol: float = 1e-6):
-    """calculate variance of AUC from Fermi-Dirac distribution"""
+def var_auc_fermi(auc: float, rho: float, N: int, resol: float = 1e-6) -> dict:
+    """calculate variance of AUC from Fermi-Dirac distribution
+
+    Args:
+        N: number of samples
+        resol: resolution for integral calculation
+
+    Returns:
+        dictionary of all parameters
+    """
 
     # calculate parameters
     bm = get_fermi_root(auc, rho)
@@ -95,11 +103,7 @@ def var_auc_fermi(auc: float, rho: float, N: int, resol: float = 1e-6):
     Pxyy_value = Pxyy_int(bm["beta"], bm["mu"], rho, resol=resol)
 
     # calculate variance and std of AUC
-    var_auc = (
-        Pxy_value * (1.0 - Pxy_value)
-        + (N1 - 1.0) * (Pxxy_value - Pxy_value * Pxy_value)
-        + (N2 - 1.0) * (Pxyy_value - Pxy_value * Pxy_value)
-    ) / (N1 * N2)
+    var_auc = (Pxy_value * (1.0 - Pxy_value) + (N1 - 1.0) * (Pxxy_value - Pxy_value * Pxy_value) + (N2 - 1.0) * (Pxyy_value - Pxy_value * Pxy_value)) / (N1 * N2)
     std_auc = np.sqrt(var_auc)
 
     return {

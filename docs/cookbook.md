@@ -1,8 +1,8 @@
 # How to generate figures in PNAS paper?
 
-### Figure 1 in PNAS
+## Figure 1 in PNAS
 
-```{python}
+```python
 import matplotlib.pyplot as plt
 
 from pyFiDEL import SimClassifier, PCR
@@ -20,9 +20,9 @@ p = PCR(c.score, c.y, sample_size=100, sample_n=1000)
 plt.plot(p.pcr, '.')
 ```
 
-### Figure 2 in PNAS
+## Figure 2 in PNAS
 
-```{python}
+```python
 import numpy as np
 from pyFiDEL.ranks import build_correpond_table
 
@@ -35,4 +35,6 @@ df = build_correpond_table(auclist, rholist, resol=.00001, method='root')
 # plot in 3D space
 ```
 
-### Figure 3 in PNAS
+[beta_surface](./figs/beta_surface.pdf)
+
+## Figure 3 in PNAS

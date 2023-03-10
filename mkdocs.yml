@@ -30,7 +30,7 @@ plugins:
               options:
                 show_source: false
                 show_submodules: yes
-                merge_init_into_class: yes
+                merge_init_into_class: no
                 docstring_options:
                   ignore_init_summary: yes
 

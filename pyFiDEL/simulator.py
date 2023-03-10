@@ -1,21 +1,34 @@
 """
 simulator.py - create gaussian score distribution to mimic binary classifier
-
-Soli Deo Gloria
 """
 
-__author__ = "Sung-Cheol Kim"
-__version__ = "1.0.0"
-
+import logging
 import numpy as np
-from scipy import special
 import pandas as pd
 import seaborn as sns
 
+from scipy import special
+
 from .ranks import auc_rank
+
+logger = logging.getLogger("simulator")
+logging.basicConfig(level=logging.INFO)
 
 
 class SimClassifier(object):
+    """Simulator for the binary classifier.
+
+    It generates multiple Gaussian score distributions to model various
+    binary classifier with different AUC.
+
+    Attributes:
+        N (int): number of samples
+        rho (float): ratio between True/False element counts
+        N1 (int): number of True elements
+        N2 (int): number of False elements
+        y (nd.array): array of ground truth
+    """
+
     # label naming
     class1 = "Y"
     class2 = "N"
@@ -34,10 +47,17 @@ class SimClassifier(object):
         self.y = np.array(y)
         self.score = None
 
-    def create_gaussian_scores(
-        self, auc0: float = 0.9, tol: float = 1e-4, max_iter: int = 2000
-    ):
-        """create gaussian scores to match AUC"""
+    def create_gaussian_scores(self, auc0: float = 0.9, tol: float = 1e-4, max_iter: int = 2000) -> np.ndarray:
+        """create gaussian scores to match AUC.
+
+        Args:
+            auc0: target Area under ROC curve (AUC)
+            tol: tolerance for target AUC
+            max_iter: the maximum number of iteration
+
+        Returns:
+            score of binary classifier
+        """
 
         count = 0
         mu = 2.0 * special.erfinv(2.0 * auc0 - 1.0)
@@ -58,13 +78,21 @@ class SimClassifier(object):
 
             count += 1
 
-        print(f"Final AUC: {simulated_auc} (iter: {count}) mu2: {mu}")
+        logger.info("Final AUC: %f (iter: %d) mu2: %f", simulated_auc, count, mu)
         self.score = score
 
         return score
 
-    def create_predictions(self, n_methods: int = 20, auc_list: list = None):
-        """create n_methods gaussian score sets"""
+    def create_predictions(self, n_methods: int = 20, auc_list: list = None) -> np.ndarray:
+        """create n_methods gaussian score sets
+
+        Args:
+            n_methods: number of classifiers
+            auc_list: list of target AUCs
+
+        Returns:
+            prediction matrix of shape (N, n_methods)
+        """
 
         if auc_list is None:
             auc_list = np.linspace(0.51, 0.99, num=n_methods)
@@ -77,14 +105,11 @@ class SimClassifier(object):
 
         return pred
 
-    def plot_o(self):
-        """build data for"""
-
-    def plot_score(self):
+    def plot_score(self) -> None:
         """plot histogram of scores"""
 
         if self.score is None:
-            print("create scores first.")
+            logger.warning("create scores first.")
             return
 
         df = pd.DataFrame()
