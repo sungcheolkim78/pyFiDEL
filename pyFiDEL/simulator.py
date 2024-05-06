@@ -1,3 +1,4 @@
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved 
 """
 simulator.py - create gaussian score distribution to mimic binary classifier
 """

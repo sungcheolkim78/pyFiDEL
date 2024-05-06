@@ -1,3 +1,4 @@
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved 
 """
 ranks.py - rank-based metric calculation for supervised learning
 """

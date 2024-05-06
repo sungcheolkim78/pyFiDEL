@@ -1,23 +1,21 @@
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved
 """
 ensemble.py - ensemble method with FiDEL
 """
 
 import logging
-import numpy as np
-import pandas as pd
-
 from typing import Any
-from ranks import (
-    auc_rank,
-    get_fermi_root
-)
+
+import numpy as np
+
+from .ranks import auc_rank, get_fermi_root
 
 logger = logging.getLogger("ensemble")
 logging.basicConfig(level=logging.INFO)
 
 
 class FiDEL(object):
-    """ ensemble classifier using FiDEL
+    """ensemble classifier using FiDEL
 
     Examples:
         >>> from pyFiDEL import FiDEL
@@ -53,8 +51,8 @@ class FiDEL(object):
         }
 
     def add_predictions(self, prediction: list | np.ndarray, method_name: str = "") -> None:
-        """ add prediction of single method
-        
+        """add prediction of single method
+
         Args:
             prediction: model predictions or scores on samples. sample order must be same on each method
             method_name: model or classifier name
@@ -63,7 +61,7 @@ class FiDEL(object):
             self.n_samples = len(prediction)
         elif self.n_samples != len(prediction):
             logger.warning("sample number does not match to predictions! %d - %d", self.n_samples, len(prediction))
-            return 
+            return
 
         rank = np.array(prediction).argsort().argsort()
         self.rank_matrix.append(rank)
@@ -71,11 +69,11 @@ class FiDEL(object):
         self.n_methods += 1
 
     def add_label(self, y_label: list, true_value: Any = "Y") -> None:
-        """ add label list of `Y` and `N` """
+        """add label list of `Y` and `N`"""
 
         if len(y_label) != self.n_samples:
             logger.warning("sample number mismatch! %d != %d", self.n_samples, len(y_label))
-            return 
+            return
 
         self.y_label = np.array(y_label)
         self.rho = np.sum(self.y_label == true_value) / len(y_label)
@@ -94,7 +92,7 @@ class FiDEL(object):
         rank_matrix = np.array(self.rank_matrix)
 
         # calculate parameters for each methods
-        self.summary["AUC"] = [auc_rank(pred, self.y_label) for pred in self.predictions]
+        self.summary["AUC"] = [auc_rank(pred, self.y_label) for pred in predictions]
 
         for i in range(self.n_methods):
             bm = get_fermi_root(self.summary["AUC"][i], self.rho, N=self.n_samples)

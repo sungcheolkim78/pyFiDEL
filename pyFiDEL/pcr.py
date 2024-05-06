@@ -1,3 +1,4 @@
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved 
 """
 pcr.py - Probability of Class y at given Rank r (PCR)
 """
