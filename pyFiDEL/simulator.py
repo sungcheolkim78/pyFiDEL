@@ -1,13 +1,13 @@
-# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved 
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved
 """
 simulator.py - create gaussian score distribution to mimic binary classifier
 """
 
 import logging
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
 from scipy import special
 
 from .ranks import auc_rank
@@ -47,6 +47,7 @@ class SimClassifier(object):
 
         self.y = np.array(y)
         self.score = None
+        self.pred = None
 
     def create_gaussian_scores(self, auc0: float = 0.9, tol: float = 1e-4, max_iter: int = 2000) -> np.ndarray:
         """create gaussian scores to match AUC.
@@ -103,6 +104,8 @@ class SimClassifier(object):
         pred = np.zeros((self.N, n_methods))
         for i in range(n_methods):
             pred[:, i] = self.create_gaussian_scores(auc0=auc_list[i])
+
+        self.pred = pred
 
         return pred
 
