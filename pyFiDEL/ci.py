@@ -1,3 +1,5 @@
+# Copyright (c) 2024 by Sung-Cheol Kim, All rights reserved 
+
 """
 ci.py - confidence interval calculation
 """
@@ -5,8 +7,8 @@ ci.py - confidence interval calculation
 import logging
 import numpy as np
 
-from utils import fermi_b
-from ranks import get_fermi_root
+from .utils import fermi_b
+from .ranks import get_fermi_root
 
 logger = logging.getLogger("ci")
 logging.basicConfig(level=logging.INFO)
